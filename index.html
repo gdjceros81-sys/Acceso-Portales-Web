@@ -60,7 +60,7 @@
                         Para usar estos accesos, tu móvil o PC debe estar conectado <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
                     </p>
                     <p class="text-red-600 text-sm mt-2">
-                        (No funcionará si estás conectado a otra red o usando datos móviles).
+                        <!(No funcionará si estás conectado a otra red o usando datos móviles).
                     </p>
                 </div>
             </section>
@@ -108,6 +108,16 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 duration-200">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                             </svg>
+                        </div>
+                        
+                        <!-- NOTA VISUAL EN LA TARJETA (Opcional, pero recomendada para consistencia) -->
+                        <div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-xs rounded shadow-sm">
+                            <p class="font-bold flex items-center mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-1">
+                                    <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                </svg>
+                                Nota: Requiere credenciales especiales
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -164,6 +174,25 @@
             <p class="text-gray-500 text-sm mb-4">Vas a conectarte a:</p>
             <code id="modalIpAddress" class="text-2xl font-mono p-2 bg-gray-100 rounded-md text-gray-800">192.168.100.1</code>
             
+            <!-- ===== MENSAJE DE ADVERTENCIA PARA ZTE (Inicialmente oculto) ===== -->
+            <div id="zteModalWarning" class="hidden mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-left">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">Atención</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>Recuerde ingresar usando las <strong>credenciales de superusuario diario</strong>.</p>
+                            <p class="mt-1 font-semibold">Si no cuenta con ellas, solicítelas a su supervisor.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== FIN MENSAJE ZTE ===== -->
+
             <div class="flex justify-center gap-4 mt-8">
                 <button id="cancelButton" class="w-full px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
                     Cancelar
@@ -189,6 +218,7 @@
         const httpsButton = document.getElementById('httpsButton'); // Botón HTTPS
         const cancelButton = document.getElementById('cancelButton');
         const modalIpAddress = document.getElementById('modalIpAddress'); // Display para la IP
+        const zteModalWarning = document.getElementById('zteModalWarning'); // Referencia al aviso ZTE
         const ipLinks = document.querySelectorAll('.ip-address');
         let targetIp = ''; // Variable para guardar solo la IP
 
@@ -209,6 +239,14 @@
             link.addEventListener('click', (e) => {
                 targetIp = link.dataset.ip; // Guardar la IP del atributo data-ip
                 modalIpAddress.textContent = targetIp; // Mostrar la IP en el modal
+                
+                // Lógica para mostrar la advertencia de ZTE solo si la IP es 192.168.1.1
+                if (targetIp === '192.168.1.1') {
+                    zteModalWarning.classList.remove('hidden');
+                } else {
+                    zteModalWarning.classList.add('hidden');
+                }
+
                 showModal(); // Mostrar el modal
             });
         });
@@ -240,6 +278,7 @@
     </script>
 </body>
 </html>
+
 
 
 
