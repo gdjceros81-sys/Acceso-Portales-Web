@@ -11,15 +11,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Estilo para simular un enlace 'copiable' */
-        .ip-address {
-            transition: all 0.2s ease-in-out;
-            cursor: pointer; /* Cambiado a cursor de puntero */
-        }
-        .ip-address:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
         /* Estilos para el Modal */
         .modal-overlay {
             transition: opacity 0.2s ease-in-out;
@@ -33,22 +24,22 @@
         }
     </style>
 </head>
-<body class="bg-blue-50 p-4 md:p-8 flex items-center justify-center min-h-screen"> <!-- Color de fondo cambiado -->
+<body class="bg-blue-50 p-4 md:p-8 flex items-center justify-center min-h-screen">
 
     <!-- Contenedor principal de la infografía -->
-    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200"> <!-- Ancho máximo aumentado y borde añadido -->
+    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
         
         <!-- 1. Encabezado Principal -->
-        <header class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white"> <!-- Gradiente actualizado -->
+        <header class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white">
             <h1 class="text-2xl md:text-3xl font-bold text-center">Guía Rápida: Acceso a Portales WEB de ONT</h1>
-            <p class="text-center text-indigo-100 text-sm md:text-base mt-1">Huawei, ZTE & Nokia</p> <!-- Texto actualizado -->
+            <p class="text-center text-indigo-100 text-sm md:text-base mt-1">Huawei, ZTE & Nokia</p>
         </header>
 
         <main class="p-6 md:p-10">
 
             <!-- 2. REQUISITO INDISPENSABLE (El punto clave) -->
-            <section class="mb-8 border-4 border-red-500 bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-5 flex items-center"> <!-- Fondo con gradiente añadido -->
-                <!-- Icono de Advertencia SVG (Actualizado) -->
+            <section class="mb-8 border-4 border-red-500 bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-5 flex items-center shadow-sm">
+                <!-- Icono de Advertencia SVG -->
                 <div class="flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-red-500 mr-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -57,60 +48,66 @@
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-red-800">¡REQUISITO INDISPENSABLE!</h2>
                     <p class="text-red-700 mt-1 text-base md:text-lg">
-                        Para usar estos accesos, la DIMMe debe estar conectada <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
+                        Para usar estos accesos, tu móvil o PC debe estar conectado <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
                     </p>
                     <p class="text-red-600 text-sm mt-2">
-                        <!(No funcionará si estás conectado a otra red o usando datos móviles).
+                        (No funcionará si estás conectado a otra red o usando datos móviles).
                     </p>
                 </div>
             </section>
 
             <!-- 3. Contenedor de las IPs (Huawei, ZTE y Nokia) -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-6"> <!-- Cambiado a 3 columnas -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 <!-- Tarjeta de Huawei -->
-                <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col"> <!-- Añadido flex flex-col -->
-                    <div class="p-5 flex items-center space-x-4 border-b border-gray-200">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex items-center space-x-4 border-b border-gray-200 bg-white">
                         <!-- Icono de Router SVG -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-blue-600 flex-shrink-0">
                             <path d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zM5.25 7.5c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0V8.25c0-.414.336-.75.75-.75zM5.25 9.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 12c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 7.5h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 9.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 12h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM15 15.75a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM15 18a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM5.25 15.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 18c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 15.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5zM8.25 18h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5z" />
                         </svg>
                         <h3 class="text-2xl font-bold text-gray-800">Huawei</h3>
                     </div>
-                    <div class="p-6 flex-grow"> <!-- Añadido flex-grow -->
-                        <p class="text-sm text-gray-600 mb-2">Acceso directo al portal WEB:</p>
-                        <!-- El "enlace" IP ahora es un div para el script -->
-                        <div data-ip="192.168.100.1" class="ip-address group block w-full bg-blue-100 border border-blue-200 text-blue-800 text-xl font-mono font-bold text-left p-4 rounded-lg transition duration-200 hover:bg-blue-200 flex items-center justify-between"> <!-- Cambiado data-url a data-ip -->
-                            <span>192.168.100.1</span>
-                            <!-- Icono de flecha -->
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 duration-200">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                            </svg>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <p class="text-sm text-gray-600 mb-3 font-medium text-center">Pulsa el botón para acceder:</p>
+                        
+                        <!-- Botón IP Huawei: Estilo llamativo y Centrado -->
+                        <div data-ip="192.168.100.1" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1">
+                            <span class="text-2xl font-mono font-bold tracking-wide">192.168.100.1</span>
+                            <div class="flex items-center space-x-2 opacity-90">
+                                <span class="text-xs uppercase font-bold tracking-wider">Conectar</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tarjeta de ZTE -->
-                <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col"> <!-- Añadido flex flex-col -->
-                    <div class="p-5 flex items-center space-x-4 border-b border-gray-200">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex items-center space-x-4 border-b border-gray-200 bg-white">
                         <!-- Icono de Router SVG -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-green-600 flex-shrink-0">
                             <path d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zM5.25 7.5c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0V8.25c0-.414.336-.75.75-.75zM5.25 9.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 12c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 7.5h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 9.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 12h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM15 15.75a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM15 18a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM5.25 15.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 18c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 15.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5zM8.25 18h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5z" />
                         </svg>
                         <h3 class="text-2xl font-bold text-gray-800">ZTE</h3>
                     </div>
-                    <div class="p-6 flex-grow"> <!-- Añadido flex-grow -->
-                        <p class="text-sm text-gray-600 mb-2">Acceso directo al portal WEB:</p>
-                        <!-- El "enlace" IP ahora es un div para el script -->
-                        <div data-ip="192.168.1.1" class="ip-address group block w-full bg-green-100 border border-green-200 text-green-800 text-xl font-mono font-bold text-left p-4 rounded-lg transition duration-200 hover:bg-green-200 flex items-center justify-between"> <!-- Cambiado data-url a data-ip -->
-                            <span>192.168.1.1</span>
-                            <!-- Icono de flecha -->
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 duration-200">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                            </svg>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <p class="text-sm text-gray-600 mb-3 font-medium text-center">Pulsa el botón para acceder:</p>
+                        
+                        <!-- Botón IP ZTE: Estilo llamativo y Centrado -->
+                        <div data-ip="192.168.1.1" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-green-800 active:border-b-0 active:translate-y-1">
+                            <span class="text-2xl font-mono font-bold tracking-wide">192.168.1.1</span>
+                            <div class="flex items-center space-x-2 opacity-90">
+                                <span class="text-xs uppercase font-bold tracking-wider">Conectar</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
+                            </div>
                         </div>
                         
-                        <!-- NOTA VISUAL EN LA TARJETA (Opcional, pero recomendada para consistencia) -->
+                        <!-- NOTA VISUAL EN LA TARJETA -->
                         <div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-xs rounded shadow-sm">
                             <p class="font-bold flex items-center mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-1">
@@ -122,24 +119,27 @@
                     </div>
                 </div>
 
-                <!-- Tarjeta de Nokia (NUEVA) -->
-                <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col">
-                    <div class="p-5 flex items-center space-x-4 border-b border-gray-200">
+                <!-- Tarjeta de Nokia -->
+                <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex items-center space-x-4 border-b border-gray-200 bg-white">
                         <!-- Icono de Router SVG -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-purple-600 flex-shrink-0">
                             <path d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zM5.25 7.5c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0V8.25c0-.414.336-.75.75-.75zM5.25 9.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 12c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 7.5h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 9.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 12h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM15 15.75a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM15 18a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM5.25 15.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 18c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 15.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5zM8.25 18h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5z" />
                         </svg>
                         <h3 class="text-2xl font-bold text-gray-800">Nokia</h3>
                     </div>
-                    <div class="p-6 flex-grow">
-                        <p class="text-sm text-gray-600 mb-2">Acceso directo al portal WEB:</p>
-                        <!-- El "enlace" IP ahora es un div para el script -->
-                        <div data-ip="192.168.1.254" class="ip-address group block w-full bg-purple-100 border border-purple-200 text-purple-800 text-xl font-mono font-bold text-left p-4 rounded-lg transition duration-200 hover:bg-purple-200 flex items-center justify-between"> <!-- Cambiado data-url a data-ip -->
-                            <span>192.168.1.254</span>
-                            <!-- Icono de flecha -->
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 duration-200">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                            </svg>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <p class="text-sm text-gray-600 mb-3 font-medium text-center">Pulsa el botón para acceder:</p>
+                        
+                        <!-- Botón IP Nokia: Estilo llamativo y Centrado -->
+                        <div data-ip="192.168.1.254" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-purple-800 active:border-b-0 active:translate-y-1">
+                            <span class="text-2xl font-mono font-bold tracking-wide">192.168.1.254</span>
+                            <div class="flex items-center space-x-2 opacity-90">
+                                <span class="text-xs uppercase font-bold tracking-wider">Conectar</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,7 +183,7 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-yellow-800">Atención</h3>
+                        <h3 class="text-sm font-medium text-yellow-800">Atención Técnico ZTE</h3>
                         <div class="mt-2 text-sm text-yellow-700">
                             <p>Recuerde ingresar usando las <strong>credenciales de superusuario diario</strong>.</p>
                             <p class="mt-1 font-semibold">Si no cuenta con ellas, solicítelas a su supervisor.</p>
@@ -278,6 +278,7 @@
     </script>
 </body>
 </html>
+
 
 
 
