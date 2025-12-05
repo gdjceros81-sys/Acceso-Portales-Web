@@ -11,6 +11,15 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Estilo para simular un enlace 'copiable' */
+        .ip-address {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .ip-address:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
         /* Estilos para el Modal */
         .modal-overlay {
             transition: opacity 0.2s ease-in-out;
@@ -18,9 +27,44 @@
         .modal-content {
             transition: all 0.2s ease-in-out;
             transform: translateY(-20px);
+            max-height: 90vh; /* Para asegurar que quepa en pantallas pequeñas */
+            overflow-y: auto; /* Scroll si es muy largo */
         }
         .modal-visible .modal-content {
             transform: translateY(0);
+        }
+        /* Estilo para el Spinner de Carga de Gemini */
+        .loader {
+            border-top-color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        /* Estilo para listas de pasos */
+        .step-list {
+            counter-reset: step;
+        }
+        .step-list li {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .step-list li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1.75rem;
+            height: 1.75rem;
+            background-color: #e5e7eb;
+            color: #4b5563;
+            border-radius: 9999px;
+            text-align: center;
+            line-height: 1.75rem;
+            font-weight: bold;
+            font-size: 0.875rem;
         }
     </style>
 </head>
@@ -31,15 +75,14 @@
         
         <!-- 1. Encabezado Principal -->
         <header class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white">
-            <h1 class="text-2xl md:text-3xl font-bold text-center">Guía Rápida: Acceso a Portales WEB de ONT</h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-center">Acceso a Portales WEB de ONT</h1>
             <p class="text-center text-indigo-100 text-sm md:text-base mt-1">Huawei, ZTE & Nokia</p>
         </header>
 
         <main class="p-6 md:p-10">
 
-            <!-- 2. REQUISITO INDISPENSABLE (El punto clave) -->
+            <!-- 2. REQUISITO INDISPENSABLE -->
             <section class="mb-8 border-4 border-red-500 bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-5 flex items-center shadow-sm">
-                <!-- Icono de Advertencia SVG -->
                 <div class="flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-red-500 mr-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -48,42 +91,41 @@
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-red-800">¡REQUISITO INDISPENSABLE!</h2>
                     <p class="text-red-700 mt-1 text-base md:text-lg">
-                        Para usar estos accesos, la DIMMe debe estar conectada <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
+                        Para usar estos accesos, tu DIMMe debe estar conectada <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
                     </p>
                     <p class="text-red-600 text-sm mt-2">
-                        <!(No funcionará si estás conectado a otra red o usando datos móviles).
+                        (No funcionará si estás conectado a otra red o usando datos móviles).
                     </p>
                 </div>
             </section>
 
-            <!-- 3. Contenedor de las IPs (Huawei, ZTE y Nokia) -->
+            <!-- 3. Contenedor de las IPs -->
             <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 <!-- Tarjeta de Huawei -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
                     <div class="p-5 border-b border-gray-200 bg-white flex flex-col xl:flex-row xl:items-center justify-between gap-3">
                         <div class="flex items-center space-x-4">
-                            <!-- Icono de Router SVG -->
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-blue-600 flex-shrink-0">
                                 <path d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zM5.25 7.5c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0V8.25c0-.414.336-.75.75-.75zM5.25 9.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 12c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 7.5h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 9.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 12h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM15 15.75a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM15 18a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM5.25 15.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 18c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 15.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5zM8.25 18h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5z" />
                             </svg>
                             <h3 class="text-2xl font-bold text-gray-800">Huawei</h3>
                         </div>
                         
-                        <!-- NUEVO: Link a Video de Configuración Mesh -->
-                        <a href="https://1drv.ms/v/c/dbce951f44708865/EQci7imvDrBBr1nSZq37e2cBBtGk5Yvk51M6bSuS-2F4WQ?e=iyoKvA" target="_blank" class="flex items-center text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-800 px-3 py-2 rounded-full transition-colors border border-blue-200 group-hover:border-blue-300">
+                        <!-- BOTÓN GUÍA MESH HUAWEI -->
+                        <button onclick="openMeshGuide('huawei')" class="flex items-center text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-800 px-3 py-2 rounded-full transition-colors border border-blue-200 group-hover:border-blue-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-1.5">
-                                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd" d="M11.25 4.533A9.707 9.707 0 006 3.755c-2.348 0-4.562.913-6.16 2.512C-1.627 7.946.338 9.829 1.869 11.43a9.75 9.75 0 010 1.14c-1.531 1.6-3.496 3.483-1.87 5.163a9.757 9.757 0 006.161 2.512c2.25.05 4.409-.85 5.968-2.38l.132-.132a.75.75 0 011.08 0l.132.132c1.559 1.53 3.718 2.43 5.968 2.38 2.348-.05 4.562-.962 6.16-2.512 1.626-1.68 3.339-3.563 1.87-5.163a9.75 9.75 0 010-1.14c1.531-1.6 3.496-3.484 1.87-5.164a9.707 9.707 0 00-6.16-2.512 9.707 9.707 0 00-5.25 1.533V4.533zM12.75 6a.75.75 0 00-1.5 0v9.75a.75.75 0 001.5 0V6z" clip-rule="evenodd" />
                             </svg>
-                            Video configuración Mesh Huawei
-                        </a>
+                            Guía Rápida Mesh Huawei
+                        </button>
                     </div>
                     
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <p class="text-sm text-gray-600 mb-3 font-medium text-center">Pulsa el botón para acceder:</p>
                         
-                        <!-- Botón IP Huawei: Estilo llamativo y Centrado -->
-                        <div data-ip="192.168.100.1" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1">
+                        <!-- Botón IP Huawei -->
+                        <div data-ip="192.168.100.1" data-brand="Huawei" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1">
                             <span class="text-2xl font-mono font-bold tracking-wide">192.168.100.1</span>
                             <div class="flex items-center space-x-2 opacity-90">
                                 <span class="text-xs uppercase font-bold tracking-wider">Conectar</span>
@@ -99,27 +141,26 @@
                 <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
                     <div class="p-5 border-b border-gray-200 bg-white flex flex-col xl:flex-row xl:items-center justify-between gap-3">
                         <div class="flex items-center space-x-4">
-                            <!-- Icono de Router SVG -->
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-green-600 flex-shrink-0">
                                 <path d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zM5.25 7.5c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0V8.25c0-.414.336-.75.75-.75zM5.25 9.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 12c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 7.5h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 9.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 12h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM15 15.75a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM15 18a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM5.25 15.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 18c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 15.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5zM8.25 18h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5z" />
                             </svg>
                             <h3 class="text-2xl font-bold text-gray-800">ZTE</h3>
                         </div>
 
-                        <!-- NUEVO: Link a Video de Configuración Mesh para ZTE -->
-                        <a href="https://1drv.ms/v/c/dbce951f44708865/EcF05b8jQD9CuG-VrFV3-NcBHf38FFcLzDAP2t8WFxnOMA?e=UcbVDi" target="_blank" class="flex items-center text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 hover:text-green-800 px-3 py-2 rounded-full transition-colors border border-green-200 group-hover:border-green-300">
+                        <!-- BOTÓN GUÍA MESH ZTE -->
+                        <button onclick="openMeshGuide('zte')" class="flex items-center text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 hover:text-green-800 px-3 py-2 rounded-full transition-colors border border-green-200 group-hover:border-green-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-1.5">
-                                <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd" d="M11.25 4.533A9.707 9.707 0 006 3.755c-2.348 0-4.562.913-6.16 2.512C-1.627 7.946.338 9.829 1.869 11.43a9.75 9.75 0 010 1.14c-1.531 1.6-3.496 3.483-1.87 5.163a9.757 9.757 0 006.161 2.512c2.25.05 4.409-.85 5.968-2.38l.132-.132a.75.75 0 011.08 0l.132.132c1.559 1.53 3.718 2.43 5.968 2.38 2.348-.05 4.562-.962 6.16-2.512 1.626-1.68 3.339-3.563 1.87-5.163a9.75 9.75 0 010-1.14c1.531-1.6 3.496-3.484 1.87-5.164a9.707 9.707 0 00-6.16-2.512 9.707 9.707 0 00-5.25 1.533V4.533zM12.75 6a.75.75 0 00-1.5 0v9.75a.75.75 0 001.5 0V6z" clip-rule="evenodd" />
                             </svg>
-                            Video configuración Mesh ZTE
-                        </a>
+                            Guía Rápida Mesh ZTE
+                        </button>
                     </div>
 
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <p class="text-sm text-gray-600 mb-3 font-medium text-center">Pulsa el botón para acceder:</p>
                         
-                        <!-- Botón IP ZTE: Estilo llamativo y Centrado -->
-                        <div data-ip="192.168.1.1" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-green-800 active:border-b-0 active:translate-y-1">
+                        <!-- Botón IP ZTE -->
+                        <div data-ip="192.168.1.1" data-brand="ZTE" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-green-800 active:border-b-0 active:translate-y-1">
                             <span class="text-2xl font-mono font-bold tracking-wide">192.168.1.1</span>
                             <div class="flex items-center space-x-2 opacity-90">
                                 <span class="text-xs uppercase font-bold tracking-wider">Conectar</span>
@@ -144,7 +185,6 @@
                 <!-- Tarjeta de Nokia -->
                 <div class="bg-gray-50 border border-gray-200 rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
                     <div class="p-5 flex items-center space-x-4 border-b border-gray-200 bg-white">
-                        <!-- Icono de Router SVG -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-purple-600 flex-shrink-0">
                             <path d="M4.5 3.75a3 3 0 00-3 3v10.5a3 3 0 003 3h15a3 3 0 003-3V6.75a3 3 0 00-3-3h-15zM5.25 7.5c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0V8.25c0-.414.336-.75.75-.75zM5.25 9.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 12c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 7.5h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 9.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM8.25 12h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5zM15 15.75a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM15 18a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H15.75a.75.75 0 01-.75-.75zM5.25 15.75c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM5.25 18c.414 0 .75.336.75.75v.008a.75.75 0 01-1.5 0v-.008c0-.414.336-.75.75-.75zM8.25 15.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5zM8.25 18h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 010-1.5z" />
                         </svg>
@@ -153,8 +193,8 @@
                     <div class="p-6 flex-grow flex flex-col justify-between">
                         <p class="text-sm text-gray-600 mb-3 font-medium text-center">Pulsa el botón para acceder:</p>
                         
-                        <!-- Botón IP Nokia: Estilo llamativo y Centrado -->
-                        <div data-ip="192.168.1.254" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-purple-800 active:border-b-0 active:translate-y-1">
+                        <!-- Botón IP Nokia -->
+                        <div data-ip="192.168.1.254" data-brand="Nokia" class="ip-address group w-full cursor-pointer bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transform hover:-translate-y-1 active:scale-95 transition-all duration-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 border-b-4 border-purple-800 active:border-b-0 active:translate-y-1">
                             <span class="text-2xl font-mono font-bold tracking-wide">192.168.1.254</span>
                             <div class="flex items-center space-x-2 opacity-90">
                                 <span class="text-xs uppercase font-bold tracking-wider">Conectar</span>
@@ -169,7 +209,6 @@
             </section>
         </main>
 
-        <!-- 4. Pie de página / Recordatorio final -->
         <footer class="p-6 bg-gray-800 text-gray-300 text-center text-sm flex items-center justify-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
@@ -178,7 +217,149 @@
         </footer>
     </div>
 
-    <!-- ===== INICIO DE MODAL DE CONFIRMACIÓN (Actualizado) ===== -->
+    <!-- ===== MODAL DE GUÍA MESH (NUEVO) ===== -->
+    <div id="meshGuideModal" class="modal-overlay fixed inset-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center p-4 z-[70] hidden opacity-0">
+        <div class="modal-content bg-white w-full max-w-2xl p-0 rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <!-- Encabezado del Modal -->
+            <div id="meshModalHeader" class="bg-gradient-to-r from-gray-700 to-gray-900 p-6 flex justify-between items-center text-white shrink-0">
+                <h2 id="meshModalTitle" class="text-2xl font-bold">Guía Rápida Mesh</h2>
+                <button onclick="closeMeshGuide()" class="text-gray-300 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Contenido Scrollable -->
+            <div class="p-6 overflow-y-auto">
+                <!-- CONTENIDO ACTUALIZADO: Guía Huawei -->
+                <div id="meshHuaweiContent" class="hidden">
+                    
+                    <!-- 7.4.1 Configuración del ONT -->
+                    <h3 class="text-xl font-bold text-blue-800 mb-3 border-b pb-2">7.4.1 Configuración del ONT (Nodo principal)</h3>
+                    <p class="mb-3 text-gray-700 font-medium">Estando conectado a la red del cliente, acceder a la interfaz de administración del ONT:</p>
+                    <ol class="step-list text-gray-700 space-y-3 mb-5">
+                        <li>Ir a la sección de <strong>“ADVANCED”</strong>.</li>
+                        <li>Clic en sección de <strong>“WLAN”</strong>.</li>
+                        <li>Clic en la sección de <strong>“WiFi coverage”</strong>.</li>
+                        <li>Habilita la función de <strong>“Enable Wi-Fi coverage”</strong>.</li>
+                        <li>Además habilita la opción de <strong>“Enable best-effort synchronization based on AP capabilities”</strong>.</li>
+                        <li>Finalmente clic en <strong>“Apply”</strong>.</li>
+                    </ol>
+                    
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 text-sm text-yellow-800 rounded-r">
+                        <p class="font-bold flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+                            NOTA IMPORTANTE:
+                        </p>
+                        Es importante considerar que el modo mesh en el ONT Huawei quedará habilitado después de reiniciarlo.
+                    </div>
+
+                    <!-- 7.4.2 Instalación de los Access Points -->
+                    <h3 class="text-xl font-bold text-blue-800 mb-3 border-b pb-2">7.4.2 Instalación de los Access Points (Nodos satélites)</h3>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-3 mb-5">
+                        <li>
+                            <strong>Configuración inicial:</strong> Conecta el Access Point a una fuente de energía asegurándote de que tanto el voltaje como el amperaje sean los correctos, lo cual puede saberse leyendo la especificación en la etiqueta del Access Point.
+                        </li>
+                        <li>
+                            <strong>Sincronización:</strong> Manual o inalámbrica.
+                        </li>
+                    </ul>
+
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-8">
+                        <h4 class="font-bold text-blue-900 mb-3">Conexión inalámbrica (más común):</h4>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="bg-blue-200 text-blue-800 font-bold text-xs rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0 mt-0.5">A</span>
+                                <span>Previamente completada la activación de la red mesh en el portal web de configuración del ONT, presiona el botón <strong>WPS</strong> en el AP.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-blue-200 text-blue-800 font-bold text-xs rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0 mt-0.5">B</span>
+                                <span>Presiona el botón <strong>WPS</strong> en el ONT.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-blue-200 text-blue-800 font-bold text-xs rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0 mt-0.5">C</span>
+                                <span>La luz LED del Access Point parpadeará y luego se quedará fija.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 7.6.1 Validación -->
+                    <h3 class="text-xl font-bold text-blue-800 mb-3 border-b pb-2">7.6.1 Validación de la red Mesh</h3>
+                    <p class="mb-3 text-gray-700 font-medium">Asegúrate de validar que la configuración de mesh haya quedado activa en el ONT:</p>
+                    <ol class="step-list text-gray-700 space-y-3">
+                        <li>Ingresa al portal web de configuración del ONT.</li>
+                        <li>Selecciona la opción <strong>”System Information”</strong>.</li>
+                        <li>Después ingresa en la sección <strong>“Home Network”</strong> para visualizar la topología de la red mesh creada.</li>
+                        <li>Valida que los equipos ONT y AP que se despliegan en la topología sean los que se encuentran instalados físicamente, comparando las MAC Address de la sección de “Home Network” sean las mismas que las de las etiquetas de los equipos ONT y AP instalados.</li>
+                    </ol>
+                </div>
+
+                <!-- CONTENIDO ACTUALIZADO: Guía ZTE -->
+                <div id="meshZteContent" class="hidden">
+                    
+                    <!-- Configuración ZTE -->
+                    <h3 class="text-xl font-bold text-green-800 mb-3 border-b pb-2">Configuración de modelos ZTE</h3>
+                    <p class="mb-3 text-gray-700 font-medium">Para configuración de modelos ZTE ir a:</p>
+                    <ol class="list-[upper-alpha] pl-5 text-gray-700 space-y-2 mb-8 font-medium">
+                        <li>La sección de <strong>“Local Network”</strong>.</li>
+                        <li>Clic en sección de <strong>“WLAN”</strong>.</li>
+                        <li>Clic en la sección de <strong>“Mesh WiFi”</strong>.</li>
+                        <li>Activa la función de <strong>“Mesh WiFi/ enable/on”</strong>.</li>
+                        <li>Dar clic en <strong>“Apply”</strong> para que los cambios en la configuración tengan efecto.</li>
+                    </ol>
+
+                    <!-- 7.4.2 Instalación de los Access Points -->
+                    <h3 class="text-xl font-bold text-green-800 mb-3 border-b pb-2">7.4.2. Instalación de los Access Points (Nodos satélites)</h3>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-3 mb-5">
+                        <li>
+                            <strong>Configuración inicial:</strong> Conecta el Access Point a una fuente de energía asegurándote de que tanto el voltaje como el amperaje sean los correctos, lo cual puede saberse leyendo la especificación en la etiqueta del Access Point.
+                        </li>
+                        <li>
+                            <strong>Sincronización:</strong> Manual o inalámbrica.
+                        </li>
+                    </ul>
+
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100 mb-8">
+                        <h4 class="font-bold text-green-900 mb-3">Conexión inalámbrica (más común):</h4>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="bg-green-200 text-green-800 font-bold text-xs rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0 mt-0.5">A</span>
+                                <span>Previamente completada la activación de la red mesh en el portal web de configuración del ONT, presiona el botón <strong>WPS</strong> en el AP.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-green-200 text-green-800 font-bold text-xs rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0 mt-0.5">B</span>
+                                <span>Presiona el botón <strong>WPS</strong> en el ONT.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-green-200 text-green-800 font-bold text-xs rounded-full w-6 h-6 flex items-center justify-center mr-3 shrink-0 mt-0.5">C</span>
+                                <span>La luz LED del Access Point parpadeará y luego se quedará fija (<strong>azul fijo</strong>).</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 7.6.2 Validación -->
+                    <h3 class="text-xl font-bold text-green-800 mb-3 border-b pb-2">7.6.2.- Validación de la red Mesh (ZTE)</h3>
+                    <ol class="list-[upper-alpha] pl-5 text-gray-700 space-y-3 font-medium">
+                        <li>Ingresa al portal web de configuración del ONT.</li>
+                        <li>Selecciona la opción <strong>“Topology”</strong>.</li>
+                        <li>Valida que los equipos ONT y AP que se despliegan en la topología sean los que se encuentran instalados físicamente, comparando las MAC Address de la sección de “Topology” sean las mismas que las de las etiquetas de los equipos ONT y AP instalados.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="p-4 bg-gray-50 border-t flex justify-end shrink-0">
+                <button onclick="closeMeshGuide()" class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ===== FIN MODAL GUÍA MESH ===== -->
+
+
+    <!-- ===== MODAL DE CONFIRMACIÓN (IP) ===== -->
     <div id="confirmationModal" class="modal-overlay fixed inset-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 hidden opacity-0">
         <div class="modal-content bg-white w-full max-w-md p-6 rounded-2xl shadow-xl text-center">
             <!-- Icono de WiFi -->
@@ -196,7 +377,7 @@
             <p class="text-gray-500 text-sm mb-4">Vas a conectarte a:</p>
             <code id="modalIpAddress" class="text-2xl font-mono p-2 bg-gray-100 rounded-md text-gray-800">192.168.100.1</code>
             
-            <!-- ===== MENSAJE DE ADVERTENCIA PARA ZTE (Inicialmente oculto) ===== -->
+            <!-- ===== MENSAJE DE ADVERTENCIA PARA ZTE ===== -->
             <div id="zteModalWarning" class="hidden mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-left">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -213,7 +394,6 @@
                     </div>
                 </div>
             </div>
-            <!-- ===== FIN MENSAJE ZTE ===== -->
 
             <div class="flex justify-center gap-4 mt-8">
                 <button id="cancelButton" class="w-full px-4 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
@@ -229,77 +409,230 @@
                     Abrir (HTTPS)
                 </button>
             </div>
+
+            <!-- ===== BOTÓN GEMINI ===== -->
+            <div class="border-t border-gray-200 mt-6 pt-6">
+                <p class="text-sm text-gray-500 mb-3">¿No sabes el usuario o la contraseña?</p>
+                <button id="geminiButton" class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
+                    ✨ Buscar Credenciales por Defecto
+                </button>
+            </div>
+
         </div>
     </div>
-    <!-- ===== FIN DE MODAL DE CONFIRMACIÓN ===== -->
+
+
+    <!-- ===== MODAL DE RESULTADOS GEMINI ===== -->
+    <div id="geminiResultModal" class="modal-overlay fixed inset-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center p-4 z-[60] hidden opacity-0">
+        <div class="modal-content bg-white w-full max-w-lg p-6 rounded-2xl shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Credenciales Comunes</h2>
+                <button id="geminiCloseButton" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="geminiLoading" class="flex flex-col items-center justify-center min-h-[200px] text-center">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+                <p class="text-gray-600 font-semibold">Buscando información con IA...</p>
+                <p class="text-sm text-gray-500">Usando Google Search para encontrar los datos más recientes.</p>
+            </div>
+
+            <div id="geminiContent" class="hidden prose prose-sm max-w-none text-gray-700">
+            </div>
+            
+        </div>
+    </div>
+
 
     <script>
-        // --- Lógica del Modal de Confirmación (Actualizada) ---
-        const modal = document.getElementById('confirmationModal');
-        const httpButton = document.getElementById('httpButton'); // Botón HTTP
-        const httpsButton = document.getElementById('httpsButton'); // Botón HTTPS
-        const cancelButton = document.getElementById('cancelButton');
-        const modalIpAddress = document.getElementById('modalIpAddress'); // Display para la IP
-        const zteModalWarning = document.getElementById('zteModalWarning'); // Referencia al aviso ZTE
-        const ipLinks = document.querySelectorAll('.ip-address');
-        let targetIp = ''; // Variable para guardar solo la IP
+        const apiKey = ""; // API KEY provista por el entorno
 
+        // --- Variables DOM ---
+        const modal = document.getElementById('confirmationModal');
+        const httpButton = document.getElementById('httpButton');
+        const httpsButton = document.getElementById('httpsButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const modalIpAddress = document.getElementById('modalIpAddress');
+        const zteModalWarning = document.getElementById('zteModalWarning');
+        const ipLinks = document.querySelectorAll('.ip-address');
+        
+        let targetIp = ''; 
+        let targetBrand = '';
+
+        // --- Modal Principal ---
         const showModal = () => {
             modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10); // Para transición
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
             setTimeout(() => modal.querySelector('.modal-content').classList.add('modal-visible'), 50);
         };
 
         const hideModal = () => {
             modal.querySelector('.modal-content').classList.remove('modal-visible');
             modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 200); // Esperar a la transición
+            setTimeout(() => modal.classList.add('hidden'), 200);
         };
 
-        // Asignar evento a todos los "enlaces" de IP
         ipLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                targetIp = link.dataset.ip; // Guardar la IP del atributo data-ip
-                modalIpAddress.textContent = targetIp; // Mostrar la IP en el modal
+                targetIp = link.dataset.ip;
+                targetBrand = link.dataset.brand;
+                modalIpAddress.textContent = targetIp;
                 
-                // Lógica para mostrar la advertencia de ZTE solo si la IP es 192.168.1.1
                 if (targetIp === '192.168.1.1') {
                     zteModalWarning.classList.remove('hidden');
                 } else {
                     zteModalWarning.classList.add('hidden');
                 }
 
-                showModal(); // Mostrar el modal
+                showModal();
             });
         });
 
-        // Eventos de los botones del modal
         httpButton.addEventListener('click', () => {
             if (targetIp) {
-                window.open(`http://${targetIp}`, '_blank'); // Abrir con HTTP
+                window.open(`http://${targetIp}`, '_blank');
             }
             hideModal();
         });
         
         httpsButton.addEventListener('click', () => {
             if (targetIp) {
-                // CORRECCIÓN DEFINITIVA: Se escribió 'https://' correctamente.
-                window.open(`https://${targetIp}`, '_blank'); // Abrir con HTTPS
+                window.open(`https://${targetIp}`, '_blank');
             }
             hideModal();
         });
 
         cancelButton.addEventListener('click', hideModal);
-
-        // Cerrar al hacer clic fuera (en el overlay)
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                hideModal();
-            }
+            if (e.target === modal) hideModal();
         });
+
+
+        // --- Funciones para las Guías Mesh (NUEVO) ---
+        const meshModal = document.getElementById('meshGuideModal');
+        const huaweiContent = document.getElementById('meshHuaweiContent');
+        const zteContent = document.getElementById('meshZteContent');
+        const meshHeader = document.getElementById('meshModalHeader');
+
+        function openMeshGuide(brand) {
+            // Resetear visibilidad
+            huaweiContent.classList.add('hidden');
+            zteContent.classList.add('hidden');
+
+            if (brand === 'huawei') {
+                huaweiContent.classList.remove('hidden');
+                meshHeader.className = "bg-gradient-to-r from-blue-700 to-blue-900 p-6 flex justify-between items-center text-white shrink-0";
+            } else if (brand === 'zte') {
+                zteContent.classList.remove('hidden');
+                meshHeader.className = "bg-gradient-to-r from-green-700 to-green-900 p-6 flex justify-between items-center text-white shrink-0";
+            }
+
+            meshModal.classList.remove('hidden');
+            setTimeout(() => meshModal.classList.remove('opacity-0'), 10);
+            setTimeout(() => meshModal.querySelector('.modal-content').classList.add('modal-visible'), 50);
+        }
+
+        function closeMeshGuide() {
+            meshModal.querySelector('.modal-content').classList.remove('modal-visible');
+            meshModal.classList.add('opacity-0');
+            setTimeout(() => meshModal.classList.add('hidden'), 200);
+        }
+
+        // --- Gemini API Logic ---
+        const geminiButton = document.getElementById('geminiButton');
+        const geminiModal = document.getElementById('geminiResultModal');
+        const geminiCloseButton = document.getElementById('geminiCloseButton');
+        const geminiLoading = document.getElementById('geminiLoading');
+        const geminiContent = document.getElementById('geminiContent');
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        const showGeminiModal = () => {
+            geminiModal.classList.remove('hidden');
+            setTimeout(() => geminiModal.classList.remove('opacity-0'), 10);
+            setTimeout(() => geminiModal.querySelector('.modal-content').classList.add('modal-visible'), 50);
+        };
+
+        const hideGeminiModal = () => {
+            geminiModal.querySelector('.modal-content').classList.remove('modal-visible');
+            geminiModal.classList.add('opacity-0');
+            setTimeout(() => geminiModal.classList.add('hidden'), 200);
+        };
+
+        async function fetchWithBackoff(apiUrl, payload, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+                }
+            }
+        }
+
+        async function fetchDefaultCredentials() {
+            geminiContent.innerHTML = '';
+            geminiContent.classList.add('hidden');
+            geminiLoading.classList.remove('hidden');
+            showGeminiModal();
+
+            const systemPrompt = `Eres un asistente de soporte técnico. Proporciona una lista concisa de usuarios/contraseñas predeterminados para routers marca ${targetBrand}. Responde en español y usa HTML.`;
+            const userQuery = `Credenciales default router ${targetBrand}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }], 
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { responseMimeType: "text/html" }
+            };
+
+            try {
+                const result = await fetchWithBackoff(apiUrl, payload);
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    let htmlContent = candidate.content.parts[0].text;
+                    const groundingMetadata = candidate.groundingMetadata;
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        const sources = groundingMetadata.groundingAttributions
+                            .map(attr => attr.web?.title && attr.web?.uri ? { title: attr.web.title, uri: attr.web.uri } : null)
+                            .filter(s => s);
+                        if (sources.length > 0) {
+                            htmlContent += '<hr class="my-4"><p class="text-sm text-gray-500">Fuentes:</p><ul>';
+                            sources.forEach(source => {
+                                htmlContent += `<li class="text-xs truncate"><a href="${source.uri}" target="_blank" class="text-blue-600 hover:underline">${source.title}</a></li>`;
+                            });
+                            htmlContent += '</ul>';
+                        }
+                    }
+                    geminiContent.innerHTML = htmlContent;
+                } else {
+                    throw new Error("Respuesta inesperada.");
+                }
+            } catch (error) {
+                geminiContent.innerHTML = `<p class='text-red-500 font-semibold'>Error.</p><p class='text-red-700 text-sm'>${error.message}</p>`;
+            } finally {
+                geminiLoading.classList.add('hidden');
+                geminiContent.classList.remove('hidden');
+            }
+        }
+
+        geminiButton.addEventListener('click', fetchDefaultCredentials);
+        geminiCloseButton.addEventListener('click', hideGeminiModal);
+        geminiModal.addEventListener('click', (e) => { if (e.target === geminiModal) hideGeminiModal(); });
+
     </script>
 </body>
 </html>
+
 
 
 
