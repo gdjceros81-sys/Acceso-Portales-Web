@@ -33,14 +33,6 @@
         .modal-visible .modal-content {
             transform: translateY(0);
         }
-        /* Estilo para el Spinner de Carga de Gemini */
-        .loader {
-            border-top-color: #3498db;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
         /* Estilo para listas de pasos */
         .step-list {
             counter-reset: step;
@@ -75,7 +67,7 @@
         
         <!-- 1. Encabezado Principal -->
         <header class="bg-gradient-to-r from-blue-700 to-indigo-800 p-6 text-white">
-            <h1 class="text-2xl md:text-3xl font-bold text-center">Acceso a Portales WEB de ONT</h1>
+            <h1 class="text-2xl md:text-3xl font-bold text-center">Guía Rápida: Acceso a Portales WEB de ONT</h1>
             <p class="text-center text-indigo-100 text-sm md:text-base mt-1">Huawei, ZTE & Nokia</p>
         </header>
 
@@ -91,10 +83,10 @@
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-red-800">¡REQUISITO INDISPENSABLE!</h2>
                     <p class="text-red-700 mt-1 text-base md:text-lg">
-                        Para usar estos accesos, tu DIMMe debe estar conectada <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
+                        Para usar estos accesos, la DIMMe debe estar conectada <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
                     </p>
                     <p class="text-red-600 text-sm mt-2">
-                        <!(No funcionará si estás conectado a otra red o usando datos móviles).
+                         <!(No funcionará si estás conectado a otra red o usando datos móviles).
                     </p>
                 </div>
             </section>
@@ -388,7 +380,7 @@
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-yellow-800">ATENCIÓN</h3>
                         <div class="mt-2 text-sm text-yellow-700">
-                            <p>Recuerde ingresar usando las <strong>credenciales de superusuario diarias</strong>.</p>
+                            <p>Recuerde ingresar usando las <strong>credenciales de superusuario diario</strong>.</p>
                             <p class="mt-1 font-semibold">Si no cuenta con ellas, solicítelas a su supervisor.</p>
                         </div>
                     </div>
@@ -410,46 +402,11 @@
                 </button>
             </div>
 
-            <!-- ===== BOTÓN GEMINI ===== -->
-            <div class="border-t border-gray-200 mt-6 pt-6">
-                <p class="text-sm text-gray-500 mb-3">¿No sabes el usuario o la contraseña?</p>
-                <button id="geminiButton" class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
-                    ✨ Buscar Credenciales por Defecto
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-
-    <!-- ===== MODAL DE RESULTADOS GEMINI ===== -->
-    <div id="geminiResultModal" class="modal-overlay fixed inset-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center p-4 z-[60] hidden opacity-0">
-        <div class="modal-content bg-white w-full max-w-lg p-6 rounded-2xl shadow-xl">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Credenciales Comunes</h2>
-                <button id="geminiCloseButton" class="text-gray-400 hover:text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <div id="geminiLoading" class="flex flex-col items-center justify-center min-h-[200px] text-center">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-                <p class="text-gray-600 font-semibold">Buscando información con IA...</p>
-                <p class="text-sm text-gray-500">Usando Google Search para encontrar los datos más recientes.</p>
-            </div>
-
-            <div id="geminiContent" class="hidden prose prose-sm max-w-none text-gray-700">
-            </div>
-            
         </div>
     </div>
 
 
     <script>
-        const apiKey = ""; // API KEY provista por el entorno
-
         // --- Variables DOM ---
         const modal = document.getElementById('confirmationModal');
         const httpButton = document.getElementById('httpButton');
@@ -541,97 +498,10 @@
             setTimeout(() => meshModal.classList.add('hidden'), 200);
         }
 
-        // --- Gemini API Logic ---
-        const geminiButton = document.getElementById('geminiButton');
-        const geminiModal = document.getElementById('geminiResultModal');
-        const geminiCloseButton = document.getElementById('geminiCloseButton');
-        const geminiLoading = document.getElementById('geminiLoading');
-        const geminiContent = document.getElementById('geminiContent');
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-        const showGeminiModal = () => {
-            geminiModal.classList.remove('hidden');
-            setTimeout(() => geminiModal.classList.remove('opacity-0'), 10);
-            setTimeout(() => geminiModal.querySelector('.modal-content').classList.add('modal-visible'), 50);
-        };
-
-        const hideGeminiModal = () => {
-            geminiModal.querySelector('.modal-content').classList.remove('modal-visible');
-            geminiModal.classList.add('opacity-0');
-            setTimeout(() => geminiModal.classList.add('hidden'), 200);
-        };
-
-        async function fetchWithBackoff(apiUrl, payload, retries = 3, delay = 1000) {
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    return await response.json();
-                } catch (error) {
-                    if (i === retries - 1) throw error;
-                    await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
-                }
-            }
-        }
-
-        async function fetchDefaultCredentials() {
-            geminiContent.innerHTML = '';
-            geminiContent.classList.add('hidden');
-            geminiLoading.classList.remove('hidden');
-            showGeminiModal();
-
-            const systemPrompt = `Eres un asistente de soporte técnico. Proporciona una lista concisa de usuarios/contraseñas predeterminados para routers marca ${targetBrand}. Responde en español y usa HTML.`;
-            const userQuery = `Credenciales default router ${targetBrand}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }], 
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: { responseMimeType: "text/html" }
-            };
-
-            try {
-                const result = await fetchWithBackoff(apiUrl, payload);
-                const candidate = result.candidates?.[0];
-
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    let htmlContent = candidate.content.parts[0].text;
-                    const groundingMetadata = candidate.groundingMetadata;
-                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                        const sources = groundingMetadata.groundingAttributions
-                            .map(attr => attr.web?.title && attr.web?.uri ? { title: attr.web.title, uri: attr.web.uri } : null)
-                            .filter(s => s);
-                        if (sources.length > 0) {
-                            htmlContent += '<hr class="my-4"><p class="text-sm text-gray-500">Fuentes:</p><ul>';
-                            sources.forEach(source => {
-                                htmlContent += `<li class="text-xs truncate"><a href="${source.uri}" target="_blank" class="text-blue-600 hover:underline">${source.title}</a></li>`;
-                            });
-                            htmlContent += '</ul>';
-                        }
-                    }
-                    geminiContent.innerHTML = htmlContent;
-                } else {
-                    throw new Error("Respuesta inesperada.");
-                }
-            } catch (error) {
-                geminiContent.innerHTML = `<p class='text-red-500 font-semibold'>Error.</p><p class='text-red-700 text-sm'>${error.message}</p>`;
-            } finally {
-                geminiLoading.classList.add('hidden');
-                geminiContent.classList.remove('hidden');
-            }
-        }
-
-        geminiButton.addEventListener('click', fetchDefaultCredentials);
-        geminiCloseButton.addEventListener('click', hideGeminiModal);
-        geminiModal.addEventListener('click', (e) => { if (e.target === geminiModal) hideGeminiModal(); });
-
     </script>
 </body>
 </html>
+
 
 
 
