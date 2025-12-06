@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACCESOS A CONFIGURACIÓN ONTs</title>
+    <title>Guía de Acceso a Portales ONT</title>
     <!-- Incluimos Tailwind CSS para un diseño profesional y responsive -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -83,10 +83,10 @@
                 <div>
                     <h2 class="text-xl md:text-2xl font-bold text-red-800">¡REQUISITO INDISPENSABLE!</h2>
                     <p class="text-red-700 mt-1 text-base md:text-lg">
-                        Para usar estos accesos, la DIMMe debe estar conectada <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
+                        Para usar estos accesos, tu DIMMe debe estar conectado <strong>directamente a la red WiFi del ONT</strong> que deseas configurar.
                     </p>
                     <p class="text-red-600 text-sm mt-2">
-                         <!(No funcionará si estás conectado a otra red o usando datos móviles).
+                        <!(No funcionará si estás conectado a otra red o usando datos móviles).
                     </p>
                 </div>
             </section>
@@ -250,6 +250,18 @@
 
                     <!-- 7.4.2 Instalación de los Access Points -->
                     <h3 class="text-xl font-bold text-blue-800 mb-3 border-b pb-2">7.4.2 Instalación de los Access Points (Nodos satélites)</h3>
+                    
+                    <!-- NUEVA ADVERTENCIA RESET FACTORY (HUAWEI) -->
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-5 text-sm text-red-800 rounded-r shadow-sm">
+                        <p class="font-bold flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            ADVERTENCIA PREVIA:
+                        </p>
+                        Antes de configurar, es necesario realizar un <strong>Factory Reset</strong> al AP presionando el botón interno de reset hasta que el equipo se reinicie.
+                    </div>
+
                     <ul class="list-disc pl-5 text-gray-700 space-y-3 mb-5">
                         <li>
                             <strong>Configuración inicial:</strong> Conecta el Access Point a una fuente de energía asegurándote de que tanto el voltaje como el amperaje sean los correctos, lo cual puede saberse leyendo la especificación en la etiqueta del Access Point.
@@ -258,7 +270,6 @@
                             <strong>Sincronización:</strong> Manual o inalámbrica.
                         </li>
                     </ul>
-
                     <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-8">
                         <h4 class="font-bold text-blue-900 mb-3">Conexión inalámbrica (más común):</h4>
                         <ul class="space-y-3 text-gray-700">
@@ -304,6 +315,18 @@
 
                     <!-- 7.4.2 Instalación de los Access Points -->
                     <h3 class="text-xl font-bold text-green-800 mb-3 border-b pb-2">7.4.2. Instalación de los Access Points (Nodos satélites)</h3>
+
+                    <!-- NUEVA ADVERTENCIA RESET FACTORY (ZTE) -->
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-5 text-sm text-red-800 rounded-r shadow-sm">
+                        <p class="font-bold flex items-center mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                            ADVERTENCIA PREVIA:
+                        </p>
+                        Antes de configurar, es necesario realizar un <strong>Factory Reset</strong> al AP presionando el botón interno de reset hasta que el equipo se reinicie.
+                    </div>
+
                     <ul class="list-disc pl-5 text-gray-700 space-y-3 mb-5">
                         <li>
                             <strong>Configuración inicial:</strong> Conecta el Access Point a una fuente de energía asegurándote de que tanto el voltaje como el amperaje sean los correctos, lo cual puede saberse leyendo la especificación en la etiqueta del Access Point.
@@ -381,7 +404,7 @@
                         <h3 class="text-sm font-medium text-yellow-800">ATENCIÓN</h3>
                         <div class="mt-2 text-sm text-yellow-700">
                             <p>Recuerde ingresar usando el usuario: Mega_gpon<strong> y la contraseña de superusuario diaria</strong>.</p>
-                            <p class="mt-1 font-semibold">Si no cuenta con ella, solicítelas a su supervisor.</p>
+                            <p class="mt-1 font-semibold">Si no cuenta con ella, solicítela a su supervisor.</p>
                         </div>
                     </div>
                 </div>
@@ -407,7 +430,7 @@
 
 
     <script>
-        // --- Variables DOM ---
+        // --- Variables DOM (Referencias al Modal de Confirmación) ---
         const modal = document.getElementById('confirmationModal');
         const httpButton = document.getElementById('httpButton');
         const httpsButton = document.getElementById('httpsButton');
@@ -419,7 +442,7 @@
         let targetIp = ''; 
         let targetBrand = '';
 
-        // --- Modal Principal ---
+        // --- Lógica Modal Principal ---
         const showModal = () => {
             modal.classList.remove('hidden');
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
@@ -468,39 +491,57 @@
         });
 
 
-        // --- Funciones para las Guías Mesh (NUEVO) ---
-        const meshModal = document.getElementById('meshGuideModal');
-        const huaweiContent = document.getElementById('meshHuaweiContent');
-        const zteContent = document.getElementById('meshZteContent');
-        const meshHeader = document.getElementById('meshModalHeader');
+        // --- Lógica de la Guía Mesh (CORREGIDA) ---
+        // Ahora obtenemos los elementos DENTRO de la función para asegurar que existen al momento del clic.
+
+        function getMeshElements() {
+             return {
+                modal: document.getElementById('meshGuideModal'),
+                huawei: document.getElementById('meshHuaweiContent'),
+                zte: document.getElementById('meshZteContent'),
+                header: document.getElementById('meshModalHeader')
+             };
+        }
 
         function openMeshGuide(brand) {
-            // Resetear visibilidad
-            huaweiContent.classList.add('hidden');
-            zteContent.classList.add('hidden');
-
-            if (brand === 'huawei') {
-                huaweiContent.classList.remove('hidden');
-                meshHeader.className = "bg-gradient-to-r from-blue-700 to-blue-900 p-6 flex justify-between items-center text-white shrink-0";
-            } else if (brand === 'zte') {
-                zteContent.classList.remove('hidden');
-                meshHeader.className = "bg-gradient-to-r from-green-700 to-green-900 p-6 flex justify-between items-center text-white shrink-0";
+            const els = getMeshElements();
+            
+            // Verificación de seguridad
+            if (!els.modal || !els.huawei || !els.zte || !els.header) {
+                console.error("Error: Elementos del modal no encontrados.");
+                return;
             }
 
-            meshModal.classList.remove('hidden');
-            setTimeout(() => meshModal.classList.remove('opacity-0'), 10);
-            setTimeout(() => meshModal.querySelector('.modal-content').classList.add('modal-visible'), 50);
+            // Resetear visibilidad
+            els.huawei.classList.add('hidden');
+            els.zte.classList.add('hidden');
+
+            if (brand === 'huawei') {
+                els.huawei.classList.remove('hidden');
+                els.header.className = "bg-gradient-to-r from-blue-700 to-blue-900 p-6 flex justify-between items-center text-white shrink-0";
+            } else if (brand === 'zte') {
+                els.zte.classList.remove('hidden');
+                els.header.className = "bg-gradient-to-r from-green-700 to-green-900 p-6 flex justify-between items-center text-white shrink-0";
+            }
+
+            els.modal.classList.remove('hidden');
+            setTimeout(() => els.modal.classList.remove('opacity-0'), 10);
+            setTimeout(() => els.modal.querySelector('.modal-content').classList.add('modal-visible'), 50);
         }
 
         function closeMeshGuide() {
-            meshModal.querySelector('.modal-content').classList.remove('modal-visible');
-            meshModal.classList.add('opacity-0');
-            setTimeout(() => meshModal.classList.add('hidden'), 200);
+            const modal = document.getElementById('meshGuideModal');
+            if (!modal) return;
+            
+            modal.querySelector('.modal-content').classList.remove('modal-visible');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
     </script>
 </body>
 </html>
+
 
 
 
