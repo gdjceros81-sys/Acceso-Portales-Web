@@ -2,94 +2,112 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1976d2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
     <title>Visor de Documentos</title>
+    
     <style>
+        /* Estilos tipo aplicación móvil (Material Design) */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 15px;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-            background-color: #f8f9fa;
+            height: 100dvh; /* Usa dvh para respetar barras de navegación de iOS/Android */
+            background-color: #f5f5f5;
+            overflow: hidden; /* Evita el scroll en el fondo de la app */
         }
 
+        /* Barra superior tipo App */
         header {
-            text-align: center;
-            margin-bottom: 15px;
+            background-color: #1976d2;
+            color: white;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 10;
+            display: flex;
+            align-items: center;
         }
 
         h2 { 
-            margin: 0 0 5px 0; 
-            font-size: 22px; 
-            color: #343a40; 
+            margin: 0; 
+            font-size: 18px; 
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
-        /* Estilo para la lista desplegable (Select) */
-        .contenedor-selector {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto 15px auto;
+        /* Contenedor del control táctil */
+        .control-panel {
+            background-color: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 5;
         }
 
+        /* Selector grande y fácil de tocar */
         select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            background-color: #ffffff;
+            padding: 14px;
             font-size: 16px;
-            color: #495057;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            appearance: auto; /* Muestra la flecha nativa del celular */
+            color: #333;
+            border: 1px solid #bdbdbd;
+            border-radius: 8px;
+            background-color: #fafafa;
+            appearance: auto;
+            outline: none;
         }
 
         select:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+            border-color: #1976d2;
+            background-color: #ffffff;
         }
 
-        /* Contenedor del PDF */
+        /* Contenedor del PDF ocupando el 100% del espacio restante */
         #pdf-container {
             flex-grow: 1;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            width: 100%;
-            background-color: #fff;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+            background-color: #e0e0e0;
+            /* Suaviza el scroll táctil en iOS */
+            -webkit-overflow-scrolling: touch; 
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            color: #6c757d;
+            color: #757575;
+            font-size: 14px;
         }
 
         iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border: none;
+        }
+        
+        /* Oculta la barra de scroll de la página completa */
+        ::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h2>Documentos Disponibles</h2>
+        <h2>Visor de Documentos</h2>
     </header>
 
-    <div class="contenedor-selector">
+    <div class="control-panel">
         <select id="selector-documentos" disabled>
-            <option value="">Buscando documentos...</option>
+            <option value="">Conectando al servidor...</option>
         </select>
     </div>
 
     <div id="pdf-container">
-        <p>Selecciona un documento para visualizarlo</p>
+        <p>Selecciona un documento arriba</p>
     </div>
 
     <script>
@@ -106,43 +124,32 @@
             try {
                 const respuesta = await fetch(apiUrl);
                 
-                if (!respuesta.ok) throw new Error("Error de conexión con GitHub.");
+                if (!respuesta.ok) throw new Error("Error de conexión");
                 
                 const archivos = await respuesta.json();
-                
-                // Filtramos solo PDFs
                 const pdfs = archivos.filter(archivo => archivo.name.toLowerCase().endsWith('.pdf'));
-
-                // Aseguramos el orden alfabético (esto respeta los prefijos numéricos como 01_, 02_)
                 pdfs.sort((a, b) => a.name.localeCompare(b.name));
 
-                // Limpiamos el selector
                 selector.innerHTML = '';
 
                 if (pdfs.length === 0) {
                     const opcionVacia = document.createElement('option');
-                    opcionVacia.textContent = "No hay documentos disponibles";
+                    opcionVacia.textContent = "No se encontraron PDFs";
                     selector.appendChild(opcionVacia);
                     return;
                 }
 
-                // Agregamos una opción inicial que invita a seleccionar
                 const opcionPorDefecto = document.createElement('option');
-                opcionPorDefecto.textContent = "Elige un documento...";
+                opcionPorDefecto.textContent = "Toca para elegir un documento...";
                 opcionPorDefecto.value = "";
                 opcionPorDefecto.disabled = true;
                 opcionPorDefecto.selected = true;
                 selector.appendChild(opcionPorDefecto);
 
-                // Poblamos la lista desplegable
                 pdfs.forEach(pdf => {
                     const opcion = document.createElement('option');
-                    opcion.value = pdf.name; // El valor real sigue siendo el nombre completo del archivo
+                    opcion.value = pdf.name; 
                     
-                    // Magia de limpieza:
-                    // 1. Quita números iniciales y guión bajo (ej. "01_")
-                    // 2. Quita la extensión ".pdf"
-                    // 3. Reemplaza guiones bajos o normales por espacios
                     let nombreLimpio = pdf.name
                         .replace(/^\d+_/, '') 
                         .replace('.pdf', '')
@@ -152,34 +159,30 @@
                     selector.appendChild(opcion);
                 });
 
-                // Habilitamos el selector para que el usuario lo pueda usar
                 selector.disabled = false;
 
-                // Desplegamos automáticamente el primer PDF de la lista (opcional)
                 if (pdfs.length > 0) {
-                    // Seleccionamos el primer archivo real (índice 1, ya que el 0 es "Elige un documento...")
                     selector.selectedIndex = 1;
                     desplegarPDF(selector.value);
                 }
 
             } catch (error) {
-                selector.innerHTML = `<option>Error: no se pudieron cargar</option>`;
+                selector.innerHTML = `<option>Error de carga</option>`;
                 console.error(error);
             }
         }
 
-        // Función para cambiar el PDF en el visor
         function desplegarPDF(nombreArchivo) {
             if (!nombreArchivo) return;
-            pdfContenedor.innerHTML = `<iframe src="${nombreArchivo}#toolbar=0" title="Visor PDF"></iframe>`;
+            
+            // #view=FitH fuerza al PDF a ajustarse al ancho del celular
+            pdfContenedor.innerHTML = `<iframe src="${nombreArchivo}#toolbar=0&view=FitH" title="Visor PDF"></iframe>`;
         }
 
-        // Escuchamos cuando el usuario elige una opción diferente en la lista desplegable
         selector.addEventListener('change', function(evento) {
             desplegarPDF(evento.target.value);
         });
 
-        // Iniciamos el proceso
         cargarDocumentos();
     </script>
 
