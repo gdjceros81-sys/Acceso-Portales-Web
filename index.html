@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1976d2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
-    <title>Visor de Documentos</title>
+    <title>Visor de Infografías</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     
@@ -22,11 +22,12 @@
             overflow: hidden;
         }
 
+        /* --- CABECERA Y NAVEGACIÓN --- */
         header {
             background-color: #1976d2;
             color: white;
             padding: 16px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 0 4px rgba(0,0,0,0.2);
             z-index: 10;
             display: flex;
             align-items: center;
@@ -35,7 +36,6 @@
 
         h2 { margin: 0; font-size: 18px; font-weight: 500; }
 
-        /* Botón para volver a la cuadrícula (oculto por defecto) */
         #btn-volver {
             display: none;
             background: none;
@@ -47,16 +47,43 @@
             font-weight: bold;
         }
 
+        /* Diseño de Pestañas (Tabs) */
+        .contenedor-pestanas {
+            display: flex;
+            background-color: #1976d2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 9;
+        }
+
+        .pestana {
+            flex: 1;
+            text-align: center;
+            padding: 14px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pestana.active {
+            color: white;
+            border-bottom: 3px solid white;
+        }
+
         /* --- VISTA DE CUADRÍCULA (TARJETAS) --- */
         #vista-cuadricula {
             flex-grow: 1;
             padding: 16px;
             overflow-y: auto;
             display: grid;
-            /* Crea columnas adaptables al tamaño de la pantalla */
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 16px;
             align-content: start;
+            -webkit-overflow-scrolling: touch;
         }
 
         .tarjeta-pdf {
@@ -75,7 +102,6 @@
             transform: scale(0.96);
         }
 
-        /* Contenedor del lienzo donde se dibujará la miniatura */
         .contenedor-miniatura {
             width: 100%;
             height: 180px;
@@ -89,7 +115,6 @@
 
         canvas {
             width: 100%;
-            /* Ajusta la altura automáticamente para no deformar la imagen */
             height: auto; 
         }
 
@@ -106,7 +131,6 @@
             color: #333;
             text-align: center;
             border-top: 1px solid #eee;
-            /* Trunca el texto si es muy largo */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -114,7 +138,7 @@
 
         /* --- VISTA DEL VISOR PDF --- */
         #vista-visor {
-            display: none; /* Oculto inicialmente */
+            display: none; 
             flex-grow: 1;
             position: relative;
             background-color: #e0e0e0;
@@ -135,30 +159,40 @@
 
     <header>
         <button id="btn-volver" onclick="cerrarVisor()">← Volver</button>
-        <h2 id="titulo-header">Documentos</h2>
-        <div style="width: 60px;"></div> </header>
+        <h2 id="titulo-header">Infografías</h2>
+        <div style="width: 60px;"></div>
+    </header>
+
+    <div class="contenedor-pestanas" id="barra-pestanas">
+        <div id="tab-quejas" class="pestana active" onclick="cambiarPestana('quejas')">Quejas</div>
+        <div id="tab-instalaciones" class="pestana" onclick="cambiarPestana('instalaciones')">Instalaciones</div>
+    </div>
 
     <div id="vista-cuadricula">
-        <p style="text-align: center; width: 100%; grid-column: 1 / -1; color: #666;">Buscando documentos...</p>
+        <p style="text-align: center; width: 100%; grid-column: 1 / -1; color: #666;">Cargando sistema...</p>
     </div>
 
     <div id="vista-visor"></div>
 
     <script>
-        // --- CONFIGURACIÓN DE PDF.JS ---
-        // Se requiere indicar la ruta del "worker" para que procese los PDF en segundo plano
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
         // --- CONFIGURACIÓN DE GITHUB ---
-        const githubUser = "gdjceros81-sys"; 
-        const githubRepo = "Acceso-Portales-Web"; 
+        const githubUser = "TU_USUARIO"; 
+        const githubRepo = "TU_REPOSITORIO"; 
         const apiUrl = `https://api.github.com/repos/${githubUser}/${githubRepo}/contents/`;
         // ---------------------------------
+
+        // Variables de estado
+        let pdfsQuejas = [];
+        let pdfsInstalaciones = [];
+        let pestanaActual = 'quejas'; // Inicia en Quejas por defecto
 
         const vistaCuadricula = document.getElementById('vista-cuadricula');
         const vistaVisor = document.getElementById('vista-visor');
         const btnVolver = document.getElementById('btn-volver');
         const tituloHeader = document.getElementById('titulo-header');
+        const barraPestanas = document.getElementById('barra-pestanas');
 
         async function cargarDocumentos() {
             try {
@@ -166,55 +200,91 @@
                 if (!respuesta.ok) throw new Error("Error de conexión");
                 
                 const archivos = await respuesta.json();
-                const pdfs = archivos.filter(archivo => archivo.name.toLowerCase().endsWith('.pdf'));
-                pdfs.sort((a, b) => a.name.localeCompare(b.name));
+                const todosLosPdfs = archivos.filter(archivo => archivo.name.toLowerCase().endsWith('.pdf'));
 
-                vistaCuadricula.innerHTML = ''; 
+                // Clasificación automática
+                pdfsQuejas = [];
+                pdfsInstalaciones = [];
 
-                if (pdfs.length === 0) {
-                    vistaCuadricula.innerHTML = '<p style="text-align:center; width:100%; grid-column: 1 / -1;">No se encontraron PDFs</p>';
-                    return;
-                }
-
-                // Generar una tarjeta por cada PDF
-                pdfs.forEach(pdf => {
-                    const nombreLimpio = pdf.name.replace(/^\d+_/, '').replace('.pdf', '').replace(/[-_]/g, ' ');
-
-                    // Construimos el HTML de la tarjeta
-                    const tarjeta = document.createElement('div');
-                    tarjeta.className = 'tarjeta-pdf';
-                    tarjeta.onclick = () => abrirVisor(pdf.name, nombreLimpio);
-
-                    tarjeta.innerHTML = `
-                        <div class="contenedor-miniatura">
-                            <span class="cargando-texto">Cargando...</span>
-                            <canvas id="canvas-${pdf.sha}"></canvas>
-                        </div>
-                        <div class="titulo-tarjeta" title="${nombreLimpio}">${nombreLimpio}</div>
-                    `;
-
-                    vistaCuadricula.appendChild(tarjeta);
-
-                    // Mandamos generar la miniatura asíncronamente
-                    generarMiniatura(pdf.name, `canvas-${pdf.sha}`);
+                todosLosPdfs.forEach(pdf => {
+                    const nombreMinusculas = pdf.name.toLowerCase();
+                    // Si el archivo dice "ins_" o "instalacion", va a la pestaña Instalaciones
+                    if (nombreMinusculas.includes('ins_') || nombreMinusculas.includes('instalacion')) {
+                        pdfsInstalaciones.push(pdf);
+                    } else {
+                        // El resto (incluyendo los que ya subiste) van a Quejas
+                        pdfsQuejas.push(pdf);
+                    }
                 });
 
+                // Ordenamos ambas listas alfabéticamente
+                pdfsQuejas.sort((a, b) => a.name.localeCompare(b.name));
+                pdfsInstalaciones.sort((a, b) => a.name.localeCompare(b.name));
+
+                // Dibujamos la cuadrícula según la pestaña activa
+                renderizarCuadricula();
+
             } catch (error) {
-                vistaCuadricula.innerHTML = '<p style="color:red; text-align:center; width:100%;">Error al cargar archivos</p>';
+                vistaCuadricula.innerHTML = '<p style="color:red; text-align:center; width:100%;">Error al cargar archivos desde GitHub</p>';
                 console.error(error);
             }
         }
 
-        // Función que usa PDF.js para extraer la página 1 y dibujarla
+        // Función para cambiar de pestaña
+        function cambiarPestana(nuevaPestana) {
+            pestanaActual = nuevaPestana;
+            
+            // Cambiamos el estilo activo de las pestañas
+            document.getElementById('tab-quejas').classList.toggle('active', pestanaActual === 'quejas');
+            document.getElementById('tab-instalaciones').classList.toggle('active', pestanaActual === 'instalaciones');
+            
+            renderizarCuadricula();
+        }
+
+        // Dibuja las tarjetas basándose en la pestaña seleccionada
+        function renderizarCuadricula() {
+            vistaCuadricula.innerHTML = ''; 
+            const listaActual = (pestanaActual === 'quejas') ? pdfsQuejas : pdfsInstalaciones;
+
+            if (listaActual.length === 0) {
+                vistaCuadricula.innerHTML = `<p style="text-align:center; width:100%; grid-column: 1 / -1; color: #666;">No hay infografías en ${pestanaActual}</p>`;
+                return;
+            }
+
+            listaActual.forEach(pdf => {
+                // Limpieza del nombre para que sea presentable
+                let nombreLimpio = pdf.name
+                    .replace(/^\d+_/, '') // Quita números iniciales ej. "01_"
+                    .replace(/ins_/i, '') // Oculta la etiqueta "ins_"
+                    .replace(/instalacion_/i, '') 
+                    .replace('.pdf', '')
+                    .replace(/[-_]/g, ' ') // Cambia guiones por espacios
+                    .trim();
+
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'tarjeta-pdf';
+                tarjeta.onclick = () => abrirVisor(pdf.name, nombreLimpio);
+
+                tarjeta.innerHTML = `
+                    <div class="contenedor-miniatura">
+                        <span class="cargando-texto">Cargando...</span>
+                        <canvas id="canvas-${pdf.sha}"></canvas>
+                    </div>
+                    <div class="titulo-tarjeta" title="${nombreLimpio}">${nombreLimpio}</div>
+                `;
+
+                vistaCuadricula.appendChild(tarjeta);
+                generarMiniatura(pdf.name, `canvas-${pdf.sha}`);
+            });
+        }
+
         async function generarMiniatura(urlPdf, canvasId) {
             try {
                 const loadingTask = pdfjsLib.getDocument(urlPdf);
                 const pdfDocument = await loadingTask.promise;
-                const pagina = await pdfDocument.getPage(1); // Obtenemos la página 1
+                const pagina = await pdfDocument.getPage(1); 
                 
-                // Escala reducida para la miniatura (ahorra memoria en celulares)
                 const viewport = pagina.getViewport({ scale: 0.5 });
-                
                 const canvas = document.getElementById(canvasId);
                 if(!canvas) return;
 
@@ -222,39 +292,33 @@
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
 
-                const renderContext = {
-                    canvasContext: contexto,
-                    viewport: viewport
-                };
+                const renderContext = { canvasContext: contexto, viewport: viewport };
 
-                // Dibujamos la página en el canvas y ocultamos el texto de "Cargando..."
                 await pagina.render(renderContext).promise;
                 canvas.previousElementSibling.style.display = 'none'; 
-
             } catch (error) {
-                console.error('Error generando miniatura para ' + urlPdf, error);
                 const canvas = document.getElementById(canvasId);
                 if(canvas) canvas.previousElementSibling.innerText = "Vista no disp.";
             }
         }
 
-        // Transición: De la cuadrícula al documento
         function abrirVisor(nombreArchivo, titulo) {
             vistaCuadricula.style.display = 'none';
+            barraPestanas.style.display = 'none'; // Ocultamos las pestañas al leer el PDF para dar más espacio
             vistaVisor.style.display = 'block';
             btnVolver.style.display = 'block';
-            tituloHeader.innerText = titulo; // Cambiamos el título superior
+            tituloHeader.innerText = titulo; 
 
             vistaVisor.innerHTML = `<iframe src="${nombreArchivo}#toolbar=0&view=FitH" title="Visor PDF"></iframe>`;
         }
 
-        // Transición: Del documento a la cuadrícula
         function cerrarVisor() {
-            vistaVisor.innerHTML = ''; // Limpiamos el iframe para liberar memoria
+            vistaVisor.innerHTML = ''; 
             vistaVisor.style.display = 'none';
-            vistaCuadricula.style.display = 'grid'; // Volvemos a modo grid
+            vistaCuadricula.style.display = 'grid'; 
+            barraPestanas.style.display = 'flex'; // Volvemos a mostrar las pestañas
             btnVolver.style.display = 'none';
-            tituloHeader.innerText = 'Documentos';
+            tituloHeader.innerText = 'Infografías';
         }
 
         cargarDocumentos();
